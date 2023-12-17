@@ -1,0 +1,77 @@
+volumes:
+  redis-data:
+  mongo-data:
+
+# TODO: create .env file with base image
+
+
+services:
+  vote:
+    ## fetch image url from env variable or use localhost
+    image: ${IMAGE_REPO_URL:-localhost}:vote-v1
+    environment:
+      - FLASK_RUN_HOST=0.0.0.0
+      - FLASK_RUN_PORT=5001
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    ports:
+        - 5000:5001
+
+  results:
+    image: ${IMAGE_REPO_URL:-localhost}:results-v1
+    environment:
+        - FLASK_RUN_HOST=0.0.0.0
+        - FLASK_RUN_PORT=5001
+        - MONGO_HOST=mongo
+        - MONGO_PORT=27017
+        - MONGO_USER=admin
+        - MONGO_PASSWORD=password
+    ports:
+      - 5001:5001
+
+  worker-go:
+    image: ${IMAGE_REPO_URL:-localhost}:worker-go-v1
+    environment:
+        - REDIS_HOST=redis
+        - REDIS_PORT=6379
+        - MONGO_HOST=mongo
+        - MONGO_PORT=27017
+        - MONGO_USER=admin
+        - MONGO_PASS=password
+
+  redis:
+    image: redis:alpine
+    ports:
+      - 6379:6379
+    volumes:
+        - redis-data:/data
+
+  redis-insight:
+    image: redislabs/redisinsight:latest
+    ports:
+      - 8001:8001
+    environment:
+      - REDIS_URI=redis://redis:6379
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    environment:
+        - MONGO_INITDB_ROOT_USERNAME=admin
+        - MONGO_INITDB_ROOT_PASSWORD=password
+        - MONGO_INITDB_DATABASE=votes
+    volumes:
+      - mongo-data:/data/db
+
+  mongo-express:
+    image: mongo-express:latest
+    ports:
+      - 8081:8081
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=password
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=password
