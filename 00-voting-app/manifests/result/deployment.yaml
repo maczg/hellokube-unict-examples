@@ -1,0 +1,36 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: result
+  namespace: voting-app
+  labels:
+    app: result
+spec:
+  replicas: 1
+  selector:
+      matchLabels:
+        app: result
+  template:
+    metadata:
+      labels:
+        app: result
+    spec:
+      containers:
+      - name: result
+        image: quay.io/massigollo/ds-workshop:result-v1
+        ports:
+        - containerPort: 5001
+        env:
+          ## value should be fetched from secret
+          - name: MONGO_USER
+            value: "admin"
+          - name: MONGO_PASSWORD
+            value: "password"
+          - name: MONGO_HOST
+            value: "mongo"
+          - name: MONGO_PORT
+            value: "27017"
+          - name: MONGO_DB
+            value: "votes"
+
+
