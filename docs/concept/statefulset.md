@@ -1,3 +1,16 @@
+## Stateful and Stateless applications
+
+Stateful and Stateless are two term that are used to describe the nature of an application. Stateful applications are those that keep track of the state of the user and the data that is being processed. 
+
+**Stateless** app are those that do not keep track of the state of the user and the data that is being processed. They are easy to scale and deploy. For example, web servers are stateless.
+Loadbalancers can easily distribute the load among the replicas because they are identical. In other term, they are interchangeable and data returned to user are always consistent
+
+**Stateful** app are those that keep track of the state of the user and the data that is being processed. They are not easy to scale and deploy. For example, databases are stateful.
+In such cases, not only databases falls into this category. Let's imagine a web application that stores user's data on memory. For example, login session user.
+Suppose a user made the first auth request to the first replica and this one store the user session. Every time a user make the request to this server, it will be correctly authenticated.
+If we scale up the application, the next request may be routed to the second replicas, that does not have the user session (in case of sticky session is not enabled). This will result in a failed authentication.
+because the two replicas are inconsistent. In other term, they are not interchangeable.
+
 ## Kubernetes and StatefulSet
 
 Due to stateless nature of containers and so Kubernetes Pods, running stateful applications like databases in Kubernetes can sound contradictory.
@@ -18,10 +31,41 @@ StatefulSet pod's name has persistent identity whit the Statefulset name and a s
 Deployment's pods are created in parallel. StatefulSet's pods are created sequentially. This is important for applications that need to be deployed in a specific order.
 StatefulSet: pods are created in a sequence and cannot be scaled down until all the pods are created.
 
-
 ### Pod transparency
 Deployment's pod querying is transparent to the user/clients. Pods are identical and can be interchanged
 Stateful's pod are not identical and cannot be interchanged. This is important because application state must be considered data synchronization among replicas volumes.
 
 ### Rescheduling
 Deployment's pods can be rescheduled to any node. StatefulSet's pods are rescheduled to the same node and at any time. Statefulset's pods retain their identity when reshcheduled on another node
+
+
+**General advice: when the application requires stable identifier for their pods/replicas, a statefulset should be used**
+
+**General advice (2): Statefulset are not bulletproof. Using statefulset without properly configuring data consistency strategies among replicas can lead to data corruption**
+
+## Postgres use case
+
+Replicated database offers a good scenario where statefulset can be used. In most of the cases, one pod acts as a master/primary database node and handles all write/read operations. Additional pods
+are deployed as read-only replicas. This pattern improve the availability of the database. In case of master node failure, one of the replicas can be promoted to master and the application can continue to work.
+
+### Q1: How does the application know which pod is the master?
+
+We can leverage the stateful property of cardinal ordering. Even if each pod has the same image, each one can load proper configuration based on its ordinal index. In this case pods posses their own state>
+For examples: 
+
+- postgres-0 act as Primary Node (read-write)
+- postgres-1 act as Replica Node (read-only)
+- postgres-2 act as Replica Node (read-only)
+
+Due to pod ordinal index guarantee, everytime the application needs to connect to the database, it can use the pod's ordinal index to determine if the pod is a master or a replica.
+Other replicas can also use hostname discovery to find if they have to act as master or as replicas.
+
+### Q2: What happens if one of the replicas fails or is scaled down?
+
+In case of Deployments, a failure or a scaledown of a pod remove arbitrarily one of the replicas. In case of a StatefulSet, the pod is removed in sequential order, so the first pod to be
+remove is the one with the highest ordinal index. In case of failure of a master node, the next replicas in the sequence maybe promoted to master. 
+
+In addition, statefulset guarantee that each pod (and so, every restarted pod with a given ordinal index) has the same persistent storage. This is important because it guarantees that the data
+is consistent among replicas when they are restarted.
+
+
