@@ -1,3 +1,16 @@
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: voting-app
+  name: redis
+  labels:
+    app: redis
+spec:
+  ports:
+    - port: 6379
+  selector:
+    app: redis
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:

@@ -1,9 +1,7 @@
 ## Kubernetes and StatefulSet
 
-Due to stateless nature of containers and so Kubernetes Pods, running stateful applications like databases in Kubernetes can sound contradictory. 
-
+Due to stateless nature of containers and so Kubernetes Pods, running stateful applications like databases in Kubernetes can sound contradictory.
 Although it is possible to run stateful applications in Kubernetes, it is not straightforward and most of the time is not recommended.
-
 The most common way to run a stateful application on Kubernetes is to use a **StatefulSet**. StatefulSets look similar to Deployments, but they are quite different. 
 
 ## Deployment vs Statefulset

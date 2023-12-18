@@ -7,8 +7,8 @@ services:
   vote:
     image: voting-app:v1
     build:
-      context: ./vote
-      dockerfile: Dockerfile
+      context: vote
+      dockerfile: vote/Dockerfile
     environment:
       - FLASK_RUN_HOST=0.0.0.0
       - FLASK_RUN_PORT=5001
@@ -20,8 +20,8 @@ services:
   results:
     image: results-app:v1
     build:
-      context: ./results
-      dockerfile: Dockerfile
+      context: results
+      dockerfile: results/Dockerfile
     environment:
         - FLASK_RUN_HOST=0.0.0.0
         - FLASK_RUN_PORT=5001
@@ -35,8 +35,8 @@ services:
   worker-go:
     image: worker-app:v1
     build:
-      context: ./worker-go
-      dockerfile: Dockerfile
+      context: worker-go
+      dockerfile: worker-go/Dockerfile
     environment:
         - REDIS_HOST=redis
         - REDIS_PORT=6379
