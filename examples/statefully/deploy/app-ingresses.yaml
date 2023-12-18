@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: statefully-ingress
+  namespace: statefully
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /deployment(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: statefully-deployment
+                port:
+                  number: 8080
+          - path: /stateful(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: statefully-stateful
+                port:
+                  number: 8080
