@@ -1,3 +1,16 @@
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: voting-app
+  name: vote
+  labels:
+    app: vote
+spec:
+  ports:
+    - port: 5000
+  selector:
+    app: vote
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:

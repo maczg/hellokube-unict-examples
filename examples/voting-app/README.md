@@ -5,6 +5,6 @@ It is based on the [Docker sample voting app](https://github.com/dockersamples/e
 
 [src](src) contains the source code for the application.
 
-[manifests](manifests) contains the Kubernetes manifests for the application. Directory composition is unnecessary but it shows how manifests are organized and grouped for each component
+[manifests](manifests) contains the Kubernetes manifests for the application.
 
-[docs](../docs) contains general kubernetes concepts
+[docs](../../docs) contains general kubernetes concepts

@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: statefully
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: statefully-deployment
+  namespace: statefully
+spec:
+    ports:
+        - port: 8080
+          targetPort: 8080
+          protocol: TCP
+    selector:
+        app: statefully-deployment
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: statefully-deployment
+  labels:
+    app: statefully-deployment
+  namespace: statefully
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+          app: statefully-deployment
+    template:
+        metadata:
+          labels:
+              app: statefully-deployment
+        spec:
+          containers:
+              - name: server
+                image: quay.io/massigollo/playground:stateful
+                imagePullPolicy: Always
+                ports:
+                  - containerPort: 8080
+                resources:
+                    limits:
+                      cpu: 100m
+                      memory: 256Mi
+                    requests:
+                      cpu: 50m
+                      memory: 128Mi
+                securityContext:
+                    allowPrivilegeEscalation: false
+                volumeMounts:
+                  - name: statefully-deployment-volume
+                    mountPath: /tmp
+          volumes:
+            - name: statefully-deployment-volume
+              persistentVolumeClaim:
+                claimName: statefully-deployment-volume
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: statefully-deployment-volume
+  namespace: statefully
+spec:
+    accessModes:
+        - ReadWriteOnce
+    resources:
+        requests:
+          storage: 1Gi

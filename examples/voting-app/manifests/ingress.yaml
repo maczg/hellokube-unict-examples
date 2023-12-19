@@ -18,5 +18,22 @@ spec:
               name: vote
               port:
                 number: 5000
+      - path: /results
+        pathType: Exact
+        backend:
+          service:
+              name: result
+              port:
+                number: 5001
+#  - host: result-app.local
+#    http:
+#      paths:
+#      - path: /results
+#        pathType: Prefix
+#        backend:
+#          service:
+#              name: result
+#              port:
+#                number: 5001
 
 

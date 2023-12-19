@@ -13,9 +13,10 @@ It covers the following topics:
 
 See [docs](docs) for more details.
 
-### Demos
+### Contents
 
-- [kind](kind) contains relevant files to setup a local kubernetes cluster using kind.
+- [kind](kind) contains relevant files to set up a local kubernetes cluster using kind.
 
-- [00-voting-app](00-voting-app) contains a simple voting application composed by several microservices. It is used to demonstrate container concepts and kubernetes basic orchestration features.
+- [examples](examples) contains examples and PoC to demonstrate containers and kubernetes features.
+  - [voting-app](examples/voting-app) contains source and deployment file for two-option voting application.
 

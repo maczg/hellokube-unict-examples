@@ -1,3 +1,17 @@
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: voting-app
+  name: result
+  labels:
+    app: result
+spec:
+  ports:
+    - port: 5001
+      targetPort: 5001
+  selector:
+    app: result
+---
 kind: Deployment
 apiVersion: apps/v1
 metadata:
@@ -17,11 +31,15 @@ spec:
     spec:
       containers:
       - name: result
-        image: quay.io/massigollo/ds-workshop:result-v1
+        image: quay.io/massigollo/dsdb-workshop:results-v1
         ports:
         - containerPort: 5001
         env:
           ## value should be fetched from secret
+          - name: FLASK_RUN_PORT
+            value: "5001"
+          - name: FLASK_RUN_HOST
+            value: "0.0.0.0"
           - name: MONGO_USER
             value: "admin"
           - name: MONGO_PASSWORD
