@@ -9,7 +9,7 @@ It is important to note that ingress controllers are not part of the kubernetes 
 From [kubernetes ingress documentation](https://kubernetes.io/docs/concepts/services-networking/ingress/), ingress may provide load balancing, ssl termination and name-based virtual hosting.
 Ingress expose HTTP and HTTPS routes from outside the cluster to *services* within the cluster. 
 
-It worth to mention that ingress exposes HTTP/HTTPs route only and it's not suitable fof TCP/UDP traffic. Exposing services that uses arbitrary ports or protocols is allowed by using [NodePort](https://kubernetes.io/docs/concepts/services-networking/service/#nodeport) or [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer) services.
+It worth to mention that ingress exposes HTTP/HTTPs route only, and it's not suitable fof TCP/UDP traffic. Exposing services that uses arbitrary ports or protocols is allowed by using [NodePort](https://kubernetes.io/docs/concepts/services-networking/service/#nodeport) or [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer) services.
 
 ### Kind prerequisites
 
