@@ -7,8 +7,8 @@ metadata:
     app: result
 spec:
   ports:
-    - port: 5001
-      targetPort: 5001
+    - port: 5002
+      targetPort: 5002
   selector:
     app: result
 ---
@@ -31,24 +31,24 @@ spec:
     spec:
       containers:
       - name: result
-        image: quay.io/massigollo/dsdb-workshop:results-v1
+        image: results-app:v1
+        imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 5001
+        - containerPort: 5002
         env:
-          ## value should be fetched from secret
           - name: FLASK_RUN_PORT
-            value: "5001"
+            value: "5002"
           - name: FLASK_RUN_HOST
             value: "0.0.0.0"
-          - name: MONGO_USER
-            value: "admin"
-          - name: MONGO_PASSWORD
+          - name: MYSQL_HOST
+            value: "mysql"
+          - name: MYSQL_PORT
+            value: "3306"
+          - name: MYSQL_USER
+            value: "root"
+          - name: MYSQL_PASSWORD
             value: "password"
-          - name: MONGO_HOST
-            value: "mongo"
-          - name: MONGO_PORT
-            value: "27017"
-          - name: MONGO_DB
+          - name: MYSQL_DB
             value: "votes"
 
 

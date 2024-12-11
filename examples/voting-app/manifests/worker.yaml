@@ -28,33 +28,32 @@ spec:
       labels:
         app: worker
     spec:
-      ## initContainers are run before the main containers. The objective is to wait for the database to be ready before starting the worker
       initContainers:
-        - name: init-mongo
-          image: mongo
-          command: ['sh', '-c', 'until mongo --host mongo:27017 --eval "quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)" &> /dev/null; do sleep 1; done;']
+        - name: init-mysql
+          image: busybox
+          command: ['sh', '-c', 'until nslookup mysql.voting-app.svc.cluster.local >/dev/null 2>&1; do echo "Waiting for MySQL"; sleep 1; done;']
         - name: init-redis
           image: redis
-          command: ['sh', '-c', 'until redis-cli -h redis ping &> /dev/null; do sleep 1; done;']
+          command: ['sh', '-c', 'until redis-cli -h redis ping &> /dev/null; do echo "Waiting for redis"; sleep 1; done;']
       containers:
         - name: worker
-          image: quay.io/massigollo/dsdb-workshop:worker-go-v1
-          imagePullPolicy: Always
+          image: worker-app:v1
+          imagePullPolicy: IfNotPresent
           ports:
-              - containerPort: 8080
+            - containerPort: 8080
           env:
           - name: REDIS_HOST
             value: "redis"
           - name: REDIS_PORT
             value: "6379"
-          - name: MONGO_HOST
-            value: "mongo"
-          - name: MONGO_PORT
-            value: "27017"
-          - name: MONGO_USER
-            value: "admin"
-          - name: MONGO_PASSWORD
+          - name: MYSQL_HOST
+            value: "mysql"
+          - name: MYSQL_PORT
+            value: "3306"
+          - name: MYSQL_USER
+            value: "root"
+          - name: MYSQL_PASS
             value: "password"
-          - name: MONGO_DB
+          - name: MYSQL_DATABASE
             value: "votes"
 
