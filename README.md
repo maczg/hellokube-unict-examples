@@ -1,6 +1,6 @@
 ## Hello Kubernetes 👋
 
-This repository contains examples and exercises for the Distributed Computing course at University of Catania.
+This repository contains examples and exercises for the Distributed Computing & Big Data course at University of Catania.
 
 [docs](docs) contains theory notes and tips regarding Kubernetes, Docker and related technologies. 
 The aim is to extend [docs](docs) overtime with more content and examples and use it as a reference for the course.
