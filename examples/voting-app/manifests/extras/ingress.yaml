@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: extras-ingress
+  namespace: voting-app
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: "/$1"
+spec:
+    ingressClassName: "nginx"
+    rules:
+      - host: redis-insight.local
+        http:
+          paths:
+            - path: /(.*)
+              pathType: ImplementationSpecific
+              backend:
+                service:
+                  name: redis-insight
+                  port:
+                    number: 5540
+      # example of reusing the same path for different services
+      - host: voting-app.local
+        http:
+          paths:
+            - path: /management/adminer/(.*)
+              pathType: ImplementationSpecific
+              backend:
+                service:
+                  name: adminer
+                  port:
+                    number: 8080
