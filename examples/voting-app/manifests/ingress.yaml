@@ -11,7 +11,28 @@ metadata:
 spec:
   ingressClassName: "nginx"
   rules:
-# alternative way to define the path for the result app
+  - host: voting-app.local
+    http:
+      paths:
+        - path: /result/(.*)
+          # This pathType is used to match the path of the request
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: result
+              port:
+                number: 5002
+        # implementationSpecific is used to match the path of the request using a regular expression
+        # Prefix is used to match the path of the request using a prefix match. We should have issues
+        # with redirects (e.g. css downloads)
+        - path: /(.*)
+          pathType: ImplementationSpecific
+          backend:
+            service:
+                name: vote
+                port:
+                  number: 5001
+    # alternative way to define the path for the result app
 #  - host: result-app.local
 #    http:
 #      paths:
@@ -22,23 +43,6 @@ spec:
 #              name: result
 #              port:
 #                number: 5002
-  - host: voting-app.local
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-              name: vote
-              port:
-                number: 5001
-      - path: /results/(.*)
-        # This pathType is used to match the path of the request
-        pathType: ImplementationSpecific
-        backend:
-          service:
-              name: result
-              port:
-                number: 5002
+
 
 
