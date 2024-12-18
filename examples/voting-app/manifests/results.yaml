@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
       - name: result
-        image: results-app:v1
+        image: localhost:results-v1
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5002

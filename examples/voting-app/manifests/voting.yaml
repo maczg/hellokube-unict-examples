@@ -34,7 +34,7 @@ spec:
             command: ['sh', '-c', 'until nc -z redis 6379; do echo "Waiting for Redis"; sleep 1; done;']
         containers:
         - name: vote
-          image: voting-app:v1
+          image: localhost:vote-v1
           imagePullPolicy: IfNotPresent
           ports:
           - containerPort: 5001

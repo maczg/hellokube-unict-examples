@@ -37,7 +37,7 @@ spec:
           command: ['sh', '-c', 'until redis-cli -h redis ping &> /dev/null; do echo "Waiting for redis"; sleep 1; done;']
       containers:
         - name: worker
-          image: worker-app:v1
+          image: localhost:worker-v1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
